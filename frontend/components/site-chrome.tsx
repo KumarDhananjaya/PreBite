@@ -34,24 +34,58 @@ export function Header() {
               {selected.flag}{" "}
               <span className="max-w-24 truncate sm:max-w-none">{cuisine}</span>
             </button>
-          <span className="hidden items-center gap-1 rounded-full border border-red-500/25 bg-red-500/10 px-2.5 py-1.5 text-xs font-medium text-red-300 sm:flex">
-            <ShieldAlert className="h-3.5 w-3.5" /> No Pork
-          </span>
-          <button onClick={toggleTheme} aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`} className="grid h-8 w-8 place-items-center rounded-full border border-zinc-800 text-zinc-400 md:hidden">{theme === "dark" ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}</button>
-        </div>
-        <nav className="hidden items-center gap-4 text-xs text-zinc-400 md:flex">
+            <span className="hidden items-center gap-1 rounded-full border border-red-500/25 bg-red-500/10 px-2.5 py-1.5 text-xs font-medium text-red-300 sm:flex">
+              <ShieldAlert className="h-3.5 w-3.5" /> No Pork
+            </span>
+            <button
+              onClick={toggleTheme}
+              aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+              className="grid h-8 w-8 place-items-center rounded-full border border-zinc-800 text-zinc-400 md:hidden"
+            >
+              {theme === "dark" ? (
+                <Sun className="h-3.5 w-3.5" />
+              ) : (
+                <Moon className="h-3.5 w-3.5" />
+              )}
+            </button>
+          </div>
+          <nav className="hidden items-center gap-4 text-xs text-zinc-400 md:flex">
             <Link href="/" className="hover:text-white">
               Explore
             </Link>
-            <Link href="/scan" className="hover:text-white">
-              Scanner
+            <Link
+              href="/menu/upload"
+              className="hover:text-white font-medium text-blue-400"
+            >
+              Upload Menu
             </Link>
-          <Link href="/scan?demo=1" className="hover:text-white">
-            Demo
-          </Link>
-          <button onClick={toggleTheme} aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`} className="grid h-8 w-8 place-items-center rounded-full border border-zinc-800 text-zinc-400 transition hover:border-zinc-600 hover:text-white">{theme === "dark" ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}</button>
-          {user ? <button onClick={signOut} className="rounded-full border border-zinc-800 px-2.5 py-1.5 text-zinc-300 hover:border-zinc-600 hover:text-white">{user.name} · Sign out</button> : <Link href="/login" className="rounded-full border border-zinc-700 px-2.5 py-1.5 text-zinc-200 hover:border-zinc-500 hover:text-white">Sign in</Link>}
-        </nav>
+            <button
+              onClick={toggleTheme}
+              aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+              className="grid h-8 w-8 place-items-center rounded-full border border-zinc-800 text-zinc-400 transition hover:border-zinc-600 hover:text-white"
+            >
+              {theme === "dark" ? (
+                <Sun className="h-3.5 w-3.5" />
+              ) : (
+                <Moon className="h-3.5 w-3.5" />
+              )}
+            </button>
+            {user ? (
+              <button
+                onClick={signOut}
+                className="rounded-full border border-zinc-800 px-2.5 py-1.5 text-zinc-300 hover:border-zinc-600 hover:text-white"
+              >
+                {user.name} · Sign out
+              </button>
+            ) : (
+              <Link
+                href="/login"
+                className="rounded-full border border-zinc-700 px-2.5 py-1.5 text-zinc-200 hover:border-zinc-500 hover:text-white"
+              >
+                Sign in
+              </Link>
+            )}
+          </nav>
         </div>
       </header>
       {open && (
