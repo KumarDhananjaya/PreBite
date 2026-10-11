@@ -1,0 +1,334 @@
+[
+  {
+    "id": "aglio-e-olio",
+    "name": "Spaghetti aglio e olio",
+    "cuisine": "Italian",
+    "description": "Garlic and chilli gently bloomed in olive oil, then tossed through pasta. Simple, garlicky and a little hot, with no sauce to hide behind.",
+    "ingredients": [
+      "pasta",
+      "garlic",
+      "olive oil",
+      "chilli",
+      "parsley"
+    ],
+    "familiarity_score": 72,
+    "new_tags": [
+      "olive oil pasta",
+      "chilli"
+    ],
+    "dietary_flags": [
+      "vegetarian",
+      "vegan option"
+    ],
+    "authenticity_score": 9,
+    "tourist_friendliness_score": 9,
+    "familiarity_bridge": "Like a tadka: aromatics bloomed in hot oil and carried through the dish.",
+    "verdict": "Worth a try if you enjoy garlic and chilli.",
+    "fear_factor": {
+      "smell": "gentle garlic",
+      "texture": "silky noodles",
+      "looks": "simple and glossy"
+    },
+    "acquired_taste": "An approachable first pasta; the garlic is the main event.",
+    "how_to_eat": [
+      "Twirl a small amount with your fork.",
+      "Use bread to gather any garlicky oil.",
+      "Adjust chilli at the table if offered."
+    ],
+    "order_phrases": [
+      {
+        "text": "Poco piccante, per favore",
+        "meaning": "Not very spicy, please",
+        "language": "Italian"
+      }
+    ],
+    "pairing": "Bread is good for the garlicky oil; try sparkling water or a light white wine.",
+    "taste_bridges": {
+      "indian": "Like a tadka: garlic and chilli bloomed in hot oil, then tossed through the pasta."
+    }
+  },
+  {
+    "id": "carbonara",
+    "name": "Spaghetti alla carbonara",
+    "cuisine": "Italian",
+    "description": "A glossy sauce made with egg, aged cheese, black pepper and cured pork cheek. Traditional Roman carbonara has no cream.",
+    "ingredients": [
+      "pasta",
+      "cured pork cheek",
+      "egg yolk",
+      "aged cheese",
+      "black pepper"
+    ],
+    "familiarity_score": 35,
+    "new_tags": [
+      "cured pork cheek",
+      "raw-egg sauce",
+      "black pepper heat"
+    ],
+    "dietary_flags": [
+      "contains pork",
+      "contains egg",
+      "contains dairy"
+    ],
+    "authenticity_score": 9,
+    "tourist_friendliness_score": 8,
+    "familiarity_bridge": "Rich and peppery, not chilli-spicy; the egg and cheese make it silky.",
+    "verdict": "Worth a try for you if you eat pork.",
+    "fear_factor": {
+      "smell": "savory and cheesy",
+      "texture": "silky sauce with crisp pork",
+      "looks": "pale and glossy"
+    },
+    "acquired_taste": "Often an easy first-timer favorite if pork and rich sauces work for you.",
+    "how_to_eat": [
+      "Twirl a small amount against the side of the plate.",
+      "Eat while hot so the sauce stays silky.",
+      "You can ask for extra cheese if you like."
+    ],
+    "order_phrases": [
+      {
+        "text": "Senza carne di maiale, per favore",
+        "meaning": "Without pork, please",
+        "language": "Italian"
+      }
+    ],
+    "pairing": "A crisp white wine or sparkling water balances the richness."
+  },
+  {
+    "id": "puttanesca",
+    "name": "Spaghetti alla puttanesca",
+    "cuisine": "Italian",
+    "description": "A punchy tomato sauce with olives, capers, garlic and often anchovy. Salty, savory and briny.",
+    "ingredients": [
+      "pasta",
+      "tomato",
+      "olives",
+      "capers",
+      "garlic",
+      "anchovy",
+      "chilli"
+    ],
+    "familiarity_score": 42,
+    "new_tags": [
+      "anchovy",
+      "capers",
+      "briny olives"
+    ],
+    "dietary_flags": [
+      "contains fish",
+      "may contain chilli"
+    ],
+    "authenticity_score": 8,
+    "tourist_friendliness_score": 6,
+    "familiarity_bridge": "A bold, tangy tomato base with salty preserved ingredients.",
+    "verdict": "Try it if you like olives and bold savory flavors.",
+    "fear_factor": {
+      "smell": "strong anchovy and capers",
+      "texture": "soft sauce and olives",
+      "looks": "dark and rustic"
+    },
+    "acquired_taste": "Many first-timers find it strong at first; the salty, briny flavor can grow on you.",
+    "how_to_eat": [
+      "Twirl a small amount to try the sauce first.",
+      "Take a sip of water between bites if the salt builds.",
+      "Ask whether the sauce contains anchovy if you avoid fish."
+    ],
+    "order_phrases": [
+      {
+        "text": "Senza acciughe, per favore",
+        "meaning": "Without anchovies, please",
+        "language": "Italian"
+      }
+    ],
+    "pairing": "Bread helps with the salty sauce; sparkling water or a light red wine works well."
+  },
+  {
+    "id": "cacio-e-pepe",
+    "name": "Tonnarelli cacio e pepe",
+    "cuisine": "Italian",
+    "description": "A Roman pasta of aged sheep's cheese and black pepper, emulsified into a creamy sauce without cream.",
+    "ingredients": [
+      "pasta",
+      "pecorino cheese",
+      "black pepper"
+    ],
+    "familiarity_score": 51,
+    "new_tags": [
+      "sheep's cheese",
+      "black pepper"
+    ],
+    "dietary_flags": [
+      "vegetarian",
+      "contains dairy"
+    ],
+    "authenticity_score": 9,
+    "tourist_friendliness_score": 8,
+    "familiarity_bridge": "Peppery and cheesy, like the warmth of pepper in a dry curry, without the spice mix.",
+    "verdict": "A good first Roman pasta if you enjoy cheese and pepper.",
+    "fear_factor": {
+      "smell": "toasty pepper and cheese",
+      "texture": "silky and lightly grainy",
+      "looks": "pale and glossy"
+    },
+    "acquired_taste": "Usually approachable; the sheep's cheese can taste sharper than expected.",
+    "how_to_eat": [
+      "Twirl a small amount while the sauce is warm.",
+      "Taste before adding salt; the cheese is salty.",
+      "Ask for extra pepper if you like more heat."
+    ],
+    "order_phrases": [
+      {
+        "text": "Senza pepe, per favore",
+        "meaning": "Without pepper, please",
+        "language": "Italian"
+      }
+    ],
+    "pairing": "Sparkling water or a crisp white wine cuts through the salty cheese.",
+    "taste_bridges": {
+      "indian": "Peppery and cheesy, like a dry curry’s pepper warmth, without the spice mix."
+    }
+  },
+  {
+    "id": "amatriciana",
+    "name": "Bucatini all'amatriciana",
+    "cuisine": "Italian",
+    "description": "A tomato sauce with cured pork cheek, pecorino and a little chilli, traditionally served with thick hollow bucatini.",
+    "ingredients": [
+      "pasta",
+      "tomato",
+      "cured pork cheek",
+      "pecorino cheese",
+      "chilli"
+    ],
+    "familiarity_score": 47,
+    "new_tags": [
+      "cured pork cheek",
+      "bucatini texture",
+      "chilli"
+    ],
+    "dietary_flags": [
+      "contains pork",
+      "contains dairy",
+      "may contain chilli"
+    ],
+    "authenticity_score": 9,
+    "tourist_friendliness_score": 8,
+    "familiarity_bridge": "A tangy tomato sauce with smoky pork, cheese and a gentle chilli warmth.",
+    "verdict": "Worth a try if you eat pork and enjoy tomato sauces.",
+    "fear_factor": {
+      "smell": "savory and tomato-rich",
+      "texture": "chewy hollow pasta",
+      "looks": "red and rustic"
+    },
+    "acquired_taste": "Familiar tomato flavors make it friendly, though bucatini takes practice to twirl.",
+    "how_to_eat": [
+      "Twirl a few strands of bucatini at a time.",
+      "Use a spoon if the long pasta is tricky.",
+      "Avoid cutting pasta if you want to follow local table custom."
+    ],
+    "order_phrases": [
+      {
+        "text": "Senza carne di maiale, per favore",
+        "meaning": "Without pork, please",
+        "language": "Italian"
+      }
+    ],
+    "pairing": "Bread helps with the tomato sauce; try a medium-bodied red wine."
+  },
+  {
+    "id": "orecchiette-cime-di-rapa",
+    "name": "Orecchiette con cime di rapa",
+    "cuisine": "Italian",
+    "description": "Small ear-shaped pasta with bitter turnip greens, garlic, olive oil and often anchovy.",
+    "ingredients": [
+      "orecchiette",
+      "bitter greens",
+      "garlic",
+      "olive oil",
+      "anchovy",
+      "chilli"
+    ],
+    "familiarity_score": 58,
+    "new_tags": [
+      "bitter greens",
+      "anchovy",
+      "ear-shaped pasta"
+    ],
+    "dietary_flags": [
+      "may contain fish",
+      "may contain chilli"
+    ],
+    "authenticity_score": 9,
+    "tourist_friendliness_score": 6,
+    "familiarity_bridge": "The bitter greens may recall sarson ka saag, paired with garlic and anchovy instead of spices.",
+    "verdict": "A rewarding choice if you enjoy leafy greens and bitter flavors.",
+    "fear_factor": {
+      "smell": "garlicky and savory",
+      "texture": "chewy pasta with soft greens",
+      "looks": "deep green and rustic"
+    },
+    "acquired_taste": "The bitterness is distinctive and can be surprising on a first bite.",
+    "how_to_eat": [
+      "Scoop greens and pasta together in each bite.",
+      "Taste before adding salt; anchovy may season the dish.",
+      "Ask if anchovy is included if you avoid fish."
+    ],
+    "order_phrases": [
+      {
+        "text": "Senza acciughe, per favore",
+        "meaning": "Without anchovies, please",
+        "language": "Italian"
+      }
+    ],
+    "pairing": "Bread and sparkling water work well with the bitter greens.",
+    "taste_bridges": {
+      "indian": "The bitter greens may recall sarson ka saag, paired with garlic and anchovy instead of spices."
+    }
+  },
+  {
+    "id": "arrabbiata",
+    "name": "Penne all'arrabbiata",
+    "cuisine": "Italian",
+    "description": "Penne in a tomato, garlic and chilli sauce. The name means angry, referring to the heat.",
+    "ingredients": [
+      "penne",
+      "tomato",
+      "garlic",
+      "chilli",
+      "olive oil"
+    ],
+    "familiarity_score": 65,
+    "new_tags": [
+      "chilli heat",
+      "short pasta"
+    ],
+    "dietary_flags": [
+      "vegetarian",
+      "vegan option",
+      "may be spicy"
+    ],
+    "authenticity_score": 8,
+    "tourist_friendliness_score": 7,
+    "familiarity_bridge": "A straightforward tomato sauce with chilli heat; ask for less chilli if needed.",
+    "verdict": "Good if you like spicy tomato dishes; choose another dish if chilli is a concern.",
+    "fear_factor": {
+      "smell": "garlicky and peppery",
+      "texture": "tender pasta and smooth sauce",
+      "looks": "bright red"
+    },
+    "acquired_taste": "Heat varies by kitchen; first-timers often underestimate the chilli.",
+    "how_to_eat": [
+      "Take a small first bite to check the heat.",
+      "Use bread to ease chilli heat; water may not help much.",
+      "Ask for it mildly spicy when ordering."
+    ],
+    "order_phrases": [
+      {
+        "text": "Poco piccante, per favore",
+        "meaning": "Not very spicy, please",
+        "language": "Italian"
+      }
+    ],
+    "pairing": "Bread helps more than water; sparkling water or a mild red wine pairs well."
+  }
+]
