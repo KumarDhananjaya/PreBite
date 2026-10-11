@@ -1,0 +1,7 @@
+.vscode/
+.DS_Store
+frontend/node_modules/
+frontend/.next/
+frontend/.vercel/
+frontend/out/
+npm-debug.log*
