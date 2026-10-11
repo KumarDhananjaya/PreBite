@@ -128,3 +128,52 @@ html[data-theme="light"] {
 [data-theme="light"] :is(.bg-blue-600, .bg-blue-500) .text-white { color: #ffffff !important; }
 /* The selected category pill was white in dark mode. */
 [data-theme="light"] button.bg-white.text-zinc-950 { background: #1d4ed8 !important; color: #ffffff !important; }
+
+/* Inputs, selects, textareas, placeholders, and keyboard focus. */
+[data-theme="light"] :is(input, textarea, select) { color: var(--light-ink); accent-color: #1d4ed8; }
+[data-theme="light"] :is(input, textarea)::placeholder { color: #64748b !important; opacity: 1; }
+[data-theme="light"] :is(input, textarea, select):focus { border-color: #2563eb !important; }
+[data-theme="light"] :is(button, a, input, textarea, select, [tabindex]):focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 3px;
+}
+[data-theme="light"] label:focus-within { border-color: #2563eb !important; }
+
+/* Interaction states must not reintroduce the dark palette. */
+[data-theme="light"] .hover\:bg-zinc-900:hover { background-color: #e2eaf4 !important; }
+[data-theme="light"] .hover\:bg-zinc-900\/60:hover { background-color: #e2eaf4 !important; }
+[data-theme="light"] .hover\:bg-zinc-900\/80:hover { background-color: #e2eaf4 !important; }
+[data-theme="light"] .hover\:bg-zinc-800:hover { background-color: #e2eaf4 !important; }
+[data-theme="light"] .hover\:bg-blue-500:hover { background-color: #1e40af !important; }
+[data-theme="light"] .hover\:bg-blue-600\/20:hover,
+[data-theme="light"] .hover\:bg-blue-500\/5:hover { background-color: #dbeafe !important; }
+[data-theme="light"] .hover\:border-zinc-700:hover,
+[data-theme="light"] .hover\:border-zinc-600:hover,
+[data-theme="light"] .hover\:border-zinc-500:hover { border-color: #94a3b8 !important; }
+[data-theme="light"] .hover\:border-blue-500:hover { border-color: #2563eb !important; }
+[data-theme="light"] .hover\:text-white:hover,
+[data-theme="light"] .hover\:text-zinc-200:hover,
+[data-theme="light"] .hover\:text-zinc-300:hover,
+[data-theme="light"] .hover\:text-zinc-950:hover { color: #172033 !important; }
+[data-theme="light"] .hover\:text-blue-200:hover,
+[data-theme="light"] .hover\:text-blue-300:hover,
+[data-theme="light"] .hover\:text-blue-400:hover { color: #1e40af !important; }
+[data-theme="light"] .hover\:text-red-200:hover,
+[data-theme="light"] .hover\:text-red-300:hover,
+[data-theme="light"] .hover\:text-red-400:hover { color: #991b1b !important; }
+[data-theme="light"] .hover\:text-amber-200:hover,
+[data-theme="light"] .hover\:text-amber-300:hover,
+[data-theme="light"] .hover\:text-amber-400:hover { color: #78350f !important; }
+[data-theme="light"] .group:hover :is(.group-hover\:text-blue-300, .group-hover\:text-blue-400) { color: #1d4ed8 !important; }
+[data-theme="light"] .bg-black\/70,
+[data-theme="light"] .bg-black\/80 { background-color: rgba(15, 23, 42, .48) !important; }
+[data-theme="light"] .shadow-2xl { box-shadow: 0 20px 48px -16px rgba(30, 50, 80, .22); }
+[data-theme="light"] .hover\:shadow-xl:hover { box-shadow: 0 12px 28px -12px rgba(30, 50, 80, .22); }
+/* Disabled controls stay legible without looking interactive. */
+[data-theme="light"] :is(button, input, select, textarea):disabled { opacity: 1 !important; }
+[data-theme="light"] :is(.bg-blue-600, .bg-blue-500).text-white:disabled {
+  background-color: #e2e8f0 !important;
+  color: #526176 !important;
+}
+[data-theme="light"] label:has(input:focus-visible) { outline: 2px solid #2563eb; outline-offset: 3px; }
+[data-theme="light"] label input:focus-visible { outline: none; }
