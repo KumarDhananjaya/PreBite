@@ -5,3 +5,16 @@ frontend/.next/
 frontend/.vercel/
 frontend/out/
 npm-debug.log*
+.env
+.env.local
+*.env
+
+
+*.tsbuildinfo
+.pytest_cache/
+*.egg-info/
+build/
+dist/
+.env.*
+!.env.example
+!.env.local.example
