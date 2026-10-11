@@ -22,10 +22,12 @@ export default function LoginPage() {
     try {
       if (isRegistration) await signUp(name, email, password);
       else await signIn(email, password);
-      router.push("/scan?demo=1");
+      router.push("/menu/upload");
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Unable to sign in.");
-    } finally { setIsSubmitting(false); }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
   return (
     <div className="mx-auto grid min-h-[calc(100vh-104px)] max-w-6xl items-center gap-10 px-4 py-10 sm:px-6 lg:grid-cols-2">
@@ -53,15 +55,17 @@ export default function LoginPage() {
           Save your palate, guardrails, and scanned menus.
         </p>
         <form onSubmit={submit} className="mt-8 space-y-4">
-          {isRegistration && <label className="block text-xs font-medium text-zinc-400">
-            First name
-            <input
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-              placeholder="Priya"
-              className="mt-2 h-12 w-full rounded-xl border border-zinc-800 bg-zinc-900 px-3 text-sm text-white outline-none transition focus:border-blue-500"
-            />
-          </label>}
+          {isRegistration && (
+            <label className="block text-xs font-medium text-zinc-400">
+              First name
+              <input
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+                placeholder="Priya"
+                className="mt-2 h-12 w-full rounded-xl border border-zinc-800 bg-zinc-900 px-3 text-sm text-white outline-none transition focus:border-blue-500"
+              />
+            </label>
+          )}
           <label className="block text-xs font-medium text-zinc-400">
             Email
             <input
@@ -72,13 +76,46 @@ export default function LoginPage() {
               className="mt-2 h-12 w-full rounded-xl border border-zinc-800 bg-zinc-900 px-3 text-sm text-white outline-none transition focus:border-blue-500"
             />
           </label>
-          <label className="block text-xs font-medium text-zinc-400">Password<input value={password} onChange={(event) => setPassword(event.target.value)} type="password" minLength={8} required placeholder="At least 8 characters" className="mt-2 h-12 w-full rounded-xl border border-zinc-800 bg-zinc-900 px-3 text-sm text-white outline-none transition focus:border-blue-500" /></label>
-          {error && <p className="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-red-300">{error}</p>}
-          <button disabled={isSubmitting} className="mt-2 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-blue-600 text-sm font-semibold text-white transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-60">
-            {isSubmitting ? "Connecting…" : isRegistration ? "Create account" : "Continue to PreBite"} <ArrowRight className="h-4 w-4" />
+          <label className="block text-xs font-medium text-zinc-400">
+            Password
+            <input
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              type="password"
+              minLength={8}
+              required
+              placeholder="At least 8 characters"
+              className="mt-2 h-12 w-full rounded-xl border border-zinc-800 bg-zinc-900 px-3 text-sm text-white outline-none transition focus:border-blue-500"
+            />
+          </label>
+          {error && (
+            <p className="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-red-300">
+              {error}
+            </p>
+          )}
+          <button
+            disabled={isSubmitting}
+            className="mt-2 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-blue-600 text-sm font-semibold text-white transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {isSubmitting
+              ? "Connecting…"
+              : isRegistration
+                ? "Create account"
+                : "Continue to PreBite"}{" "}
+            <ArrowRight className="h-4 w-4" />
           </button>
         </form>
-        <button onClick={() => { setIsRegistration(!isRegistration); setError(null); }} className="mt-4 w-full text-center text-xs text-blue-400 hover:text-blue-300">{isRegistration ? "Already have an account? Sign in" : "New here? Create an account"}</button>
+        <button
+          onClick={() => {
+            setIsRegistration(!isRegistration);
+            setError(null);
+          }}
+          className="mt-4 w-full text-center text-xs text-blue-400 hover:text-blue-300"
+        >
+          {isRegistration
+            ? "Already have an account? Sign in"
+            : "New here? Create an account"}
+        </button>
       </div>
     </div>
   );
