@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import get_settings
 from app.db import close_mongo_client, init_db
-from app.routes import auth, community, dishes, passport, users
+from app.routes import auth, community, dishes, menus, passport, users
 
 settings = get_settings()
 
@@ -29,5 +29,8 @@ def health():
     return {"status": "ok", "service": "prebite-api"}
 
 
-for route in (auth.router, users.router, dishes.router, community.router, passport.router):
+for route in (auth.router, users.router, dishes.router, menus.router, community.router, passport.router):
     app.include_router(route, prefix=settings.api_v1_prefix)
+
+# Also expose menus at root /menus/... for direct path compatibility
+app.include_router(menus.router)
