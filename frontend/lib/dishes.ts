@@ -1,5 +1,7 @@
+import type { ApiDish, ApiTasteBridge } from "@/lib/api";
+
 export type Dish = {
-  id: "spaghetti-aglio-e-olio" | "rigatoni-carbonara" | "cacio-e-pepe";
+  id: string;
   name: string;
   phonetic: string;
   literal: string;
@@ -17,6 +19,38 @@ export type Dish = {
   waiterTranslation: string;
   photo: string;
 };
+
+const photoByDishId: Record<string, string> = {
+  "aglio-e-olio": "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?auto=format&fit=crop&w=1200&q=85",
+  carbonara: "https://images.unsplash.com/photo-1556761223-4c4282c73f77?auto=format&fit=crop&w=1200&q=85",
+  "cacio-e-pepe": "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&w=1200&q=85",
+};
+const fallbackPhoto = "https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=1200&q=85";
+
+export function fromApiDish(source: ApiDish, bridge?: ApiTasteBridge): Dish {
+  const flags = bridge?.dietary_flags ?? source.dietary_flags;
+  const containsPork = flags.some((flag) => /pork|guanciale/i.test(flag));
+  const phrase = source.order_phrases?.[0];
+  return {
+    id: source.id,
+    name: source.name,
+    phonetic: source.name,
+    literal: source.description,
+    analogy: bridge?.explanation ?? source.familiarity_bridge,
+    technique: source.description,
+    mouthfeel: source.new_tags.join(" · ") || "Ask your server about the texture.",
+    familiarity: bridge?.familiarity_score ?? source.familiarity_score,
+    heat: source.new_tags.some((tag) => /chilli|pepper|spicy/i.test(tag)) ? 3 : 1,
+    richness: source.ingredients.some((item) => /cheese|egg|pork|cream/i.test(item)) ? 4 : 2,
+    salt: source.ingredients.some((item) => /capers|anchovy|cheese|cured/i.test(item)) ? 4 : 2,
+    umami: source.ingredients.some((item) => /anchovy|cheese|pork/i.test(item)) ? 4 : 2,
+    safe: !containsPork,
+    warning: containsPork ? "Contains Pork" : undefined,
+    waiterText: phrase?.text ?? "Posso avere questo piatto, per favore?",
+    waiterTranslation: phrase?.meaning ?? "May I have this dish, please?",
+    photo: photoByDishId[source.id] ?? fallbackPhoto,
+  };
+}
 
 export const dishes: Dish[] = [
   { id: "spaghetti-aglio-e-olio", name: "Spaghetti Aglio e Olio", phonetic: "Ah-lyo eh Oh-lyo", literal: "Spaghetti with garlic and oil", analogy: "Garlic & Chilli Tadka", technique: "Garlic blooms slowly in olive oil, then pasta water binds it into a light gloss — the same fragrant bloom-and-toss energy as a chilli tadka.", mouthfeel: "Glossy, al dente chew, no heavy cream.", familiarity: 85, heat: 3, richness: 2, salt: 2, umami: 2, safe: true, waiterText: "Poco piccante, per favore.", waiterTranslation: "A little spicy, please.", photo: "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?auto=format&fit=crop&w=1200&q=85" },
