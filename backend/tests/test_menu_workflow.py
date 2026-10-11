@@ -286,4 +286,3 @@ def test_thai_menu_upload_does_not_return_italian_dishes():
     assert not any("carbonara" in name for name in dish_names)
     assert not any("cacio e pepe" in name for name in dish_names)
     assert not any("margherita" in name for name in dish_names)
-

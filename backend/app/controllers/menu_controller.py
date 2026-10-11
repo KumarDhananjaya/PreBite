@@ -558,4 +558,3 @@ def retry_menu_processing(
     _persist_menu(db, menu_id, document)
 
     return _strip_internal_fields(document) or {}
-
