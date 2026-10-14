@@ -41,7 +41,7 @@ The application combines a responsive Next.js frontend, a FastAPI backend, Mongo
 - Explore flavor and spice descriptions, with restaurant facts presented separately from general culinary inferences.
 - Distinguish explicitly listed ingredients from unverified inferred ingredients.
 - Discover alternatives drawn from the same uploaded menu.
-- View Wikimedia Commons reference photos with source links, photographer credits, and license names when available.
+- View dish-matched reference photos from Google Images (when configured) or Wikimedia Commons, with source links and attribution when available.
 - Reuse cached explanations and image metadata on subsequent requests.
 
 ### Scan matching and dining assistance
@@ -79,13 +79,13 @@ flowchart LR
     API --> Controllers[Controllers and services]
     Controllers --> DB[(MongoDB)]
     Controllers --> Claude[Claude API: extraction and explanations]
-    Controllers --> Commons[Wikimedia Commons: reference images]
+    Controllers --> Images[Google Images via SerpApi / Wikimedia Commons]
     DB -->|Menu records and cached explanations| Controllers
 ```
 
 The frontend calls a configurable public API URL. FastAPI routes validate requests and delegate menu processing, dish explanations, image search, and persistence to backend controllers and services. Blocking operations in the menu upload, scan, explanation, and retry routes run in worker threads.
 
-The shared Claude client handles structured responses, media preparation, retries for transient errors, and response truncation. MongoDB stores extracted menu records and cached explanation data. The image service searches Wikimedia Commons independently of the LLM, so image URLs come from actual search results.
+The shared Claude client handles structured responses, media preparation, retries for transient errors, and response truncation. MongoDB stores extracted menu records and cached explanation data. The image service searches Google Images via SerpApi when configured, with Wikimedia Commons as a free fallback. Image URLs come from actual search results independently of the LLM.
 
 ## Technology stack
 
@@ -319,9 +319,13 @@ Original upload bytes are **not retained by default**. The service provides file
 
 ### Images and external services
 
-Menu explanation photos come from Wikimedia Commons search, which returns up to three eligible reference images. The frontend shows source and license information and artist credits when provided. Search may return no suitable image, and reference images may differ from the restaurant's presentation. Catalog compatibility views have separate reference-image behavior.
+Scanned catalog and dish explanation photos use the full dish name (and cuisine when available). Google Images is searched through [SerpApi](https://serpapi.com/google-images-api) when `SERPAPI_API_KEY` is configured in `backend/.env`. Restart the backend after adding the key. This key stays on the backend; do not set a `NEXT_PUBLIC_` key. Without a key, or when Google returns no eligible result, the service uses free Wikimedia Commons search.
 
-Menu files are sent to Anthropic when live AI analysis is configured. Dish names are sent to Wikimedia Commons for reference-image lookup. Review these data flows before uploading confidential material.
+Results are ranked by dish-name word overlap, accepting nearby dishes when an exact match is unavailable, and must have public HTTPS image/source URLs and pass image-size filtering when Google supplies dimensions. Generic category stock images and Unsplash results are not used. This is text-based relevance filtering, not visual verification of the restaurant's dish. A failed or unmatched search leaves the image empty. Successful results are cached in memory for six hours; empty searches are cached for one minute (up to 256 dish/cuisine queries); menu photos and source metadata are persisted. Existing saved Unsplash photos and missing catalog images are refreshed when opened. Dish details display the catalog photo even while the explanation is loading.
+
+The frontend links to the original source and shows license/artist information when available. Google results are not assumed to carry a reuse license; consult the source. Reference presentation may differ from the restaurant's. Landing-page and demo illustrations remain separate from scanned catalog photos.
+
+Menu files are sent to Anthropic when live AI analysis is configured. Dish names and cuisine context are sent to SerpApi/Google when configured, and dish names to Wikimedia Commons for the fallback. Review these data flows before uploading confidential material.
 
 ## Testing and builds
 

@@ -4,6 +4,7 @@ from __future__ import annotations
 import base64
 import binascii
 import logging
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from typing import Any
 
@@ -13,7 +14,7 @@ from pymongo.database import Database
 from app.schemas import DishUpdateSchema
 from app.services.dish_explanation_service import generate_dish_explanation
 from app.services.menu_service import MenuService
-from app.services.dish_image_service import find_dish_images
+from app.services.dish_image_service import find_dish_images, is_unsplash_image
 
 logger = logging.getLogger(__name__)
 
@@ -90,6 +91,21 @@ def _get_menu(db: Database, menu_id: str) -> dict[str, Any]:
             detail=f"Menu with ID '{menu_id}' not found",
         )
 
+    legacy = [dish for dish in menu.get("dishes", []) if isinstance(dish, dict)
+              and (is_unsplash_image(dish.get("image_url")) or is_unsplash_image(dish.get("photo"))
+                   or not (dish.get("image_url") or dish.get("photo")))]
+    if legacy:
+        with ThreadPoolExecutor(max_workers=min(4, len(legacy))) as pool:
+            results = list(pool.map(lambda dish: find_dish_images(dish.get("name") or "", dish.get("cuisine") or dish.get("category")), legacy))
+        for dish, images in zip(legacy, results):
+            image = images[0] if images else {}
+            dish.update(reference_images=images, image_url=image.get("url"), photo=image.get("url"),
+                        image_source_url=image.get("source_url"), image_source=image.get("source"),
+                        image_provider=image.get("provider"))
+        try:
+            _persist_menu(db, menu_id, {"dishes": menu["dishes"]})
+        except Exception:
+            logger.warning("Unable to persist refreshed menu photos for %s", menu_id)
     return menu
 
 
@@ -318,6 +334,13 @@ def update_menu_dish(
             # Explicit null values are retained when the schema permits them.
             dish[key] = value
 
+        if "name" in update_data and dish.get("name") != original_dish.get("name"):
+            images = find_dish_images(dish.get("name") or "", dish.get("cuisine") or dish.get("category"))
+            image = images[0] if images else {}
+            dish.update(reference_images=images, image_url=image.get("url"), photo=image.get("url"),
+                        image_source_url=image.get("source_url"), image_source=image.get("source"),
+                        image_provider=image.get("provider"))
+
         # Any edit can affect the explanation, so discard stale cached content.
         dish.pop("explanation_cache", None)
         dish["is_user_corrected"] = True
@@ -431,7 +454,7 @@ def explain_dish(
             detail="Unable to generate the dish explanation. Please try again.",
         ) from exc
 
-    explanation_dict["images"] = find_dish_images(target_dish.get("name") or "")
+    explanation_dict["images"] = target_dish.get("reference_images") or find_dish_images(target_dish.get("name") or "", target_dish.get("cuisine"))
     target_dish["explanation_cache"] = explanation_dict
     dishes[target_index] = target_dish
 

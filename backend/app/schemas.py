@@ -88,6 +88,8 @@ class DishAlternative(BaseModel):
 
 
 class DishImageSchema(BaseModel):
+    source: str = ""
+    provider: str = ""
     url: str
     source_url: str
     title: str = ""

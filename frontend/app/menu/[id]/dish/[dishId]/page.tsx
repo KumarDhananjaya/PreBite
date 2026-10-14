@@ -198,6 +198,27 @@ export default function DishDetailPage() {
           {dish.name}
         </h1>
 
+        {(dish.image_url || dish.photo || explanation?.images?.[0]?.url) && (
+          <figure className="mt-5 overflow-hidden rounded-2xl border border-zinc-800">
+            <img
+              src={dish.image_url || dish.photo || explanation?.images?.[0]?.url || ""}
+              alt={`Reference photo for ${dish.name}`}
+              referrerPolicy="no-referrer"
+              className="max-h-96 w-full object-cover"
+              onError={(event) => { event.currentTarget.style.display = "none"; }}
+            />
+            <figcaption className="bg-zinc-950 px-4 py-3 text-xs text-zinc-400">
+              Closest dish reference photo; restaurant presentation may vary.
+              {(dish.image_source_url || explanation?.images?.[0]?.source_url) && (
+                <a href={dish.image_source_url || explanation?.images?.[0]?.source_url}
+                  target="_blank" rel="noopener noreferrer" className="ml-2 text-blue-300 hover:underline">
+                  View source
+                </a>
+              )}
+            </figcaption>
+          </figure>
+        )}
+
         <div className="mt-3 rounded-2xl border border-zinc-800/80 bg-zinc-950/80 p-4">
           <p className="text-[11px] font-semibold uppercase tracking-wider text-zinc-500">
             Original Restaurant Description
@@ -233,7 +254,7 @@ export default function DishDetailPage() {
                   referrerPolicy="no-referrer" className="h-48 w-full object-cover"
                   onError={(event) => { event.currentTarget.style.display = "none"; }} />
                 <figcaption className="p-3 text-xs text-zinc-400">
-                  <a href={image.source_url} target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:underline">Wikimedia Commons · {image.license}</a>
+                  <a href={image.source_url} target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:underline">{image.source || "Wikimedia Commons"}{image.license ? ` · ${image.license}` : ""}</a>
                   {image.artist && <p className="mt-1">Photo: {image.artist}</p>}
                 </figcaption>
               </figure>
