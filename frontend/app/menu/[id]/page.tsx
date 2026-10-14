@@ -145,7 +145,7 @@ export default function DigitalMenuPage() {
         if (!inName && !inDesc && !inIng) return false;
       }
       return true;
-    });
+    }).sort((a, b) => Number(Boolean(b.image_url || b.photo)) - Number(Boolean(a.image_url || a.photo)));
   }, [menu, searchQuery, selectedCategory, selectedDietary]);
 
   // Handle Retry
@@ -487,8 +487,18 @@ export default function DigitalMenuPage() {
                     <img
                       src={imageUrl}
                       alt={dish.name}
+                      loading="lazy"
+                      referrerPolicy="no-referrer"
+                      onError={(event) => { event.currentTarget.style.display = "none"; }}
                       className="mb-4 h-28 w-full rounded-xl border border-zinc-800 object-cover"
                     />
+                  )}
+                  {imageUrl && dish.image_source_url && (
+                    <a href={dish.image_source_url} target="_blank" rel="noopener noreferrer"
+                      onClick={(event) => event.stopPropagation()}
+                      className="mb-3 block text-xs text-zinc-400 hover:text-white">
+                      Reference photo · {dish.image_source || "View source"}
+                    </a>
                   )}
                   {/* Header: Category + Badges */}
                   <div className="flex items-start justify-between gap-2">

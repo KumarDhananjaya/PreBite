@@ -18,7 +18,7 @@ from app.core.text_utils import (
     parse_price,
 )
 from app.schemas import ExtractedDishSchema
-from app.services.gemini_service import safe_image_url
+from app.services.dish_image_service import find_dish_images
 
 logger = logging.getLogger(__name__)
 
@@ -366,6 +366,15 @@ class MenuService:
         position_by_key: dict[tuple[str, str, float | None], int] = {}
         dishes: list[dict[str, Any]] = []
 
+        image_queries = list(dict.fromkeys(
+            (normalize_text(dish.get("name")), normalize_text(dish.get("cuisine")) or normalize_text(dish.get("category")))
+            for dish in extracted_dishes if normalize_text(dish.get("name"))
+        ))
+        image_results = {}
+        if image_queries:
+            with ThreadPoolExecutor(max_workers=min(4, len(image_queries))) as pool:
+                image_results = dict(zip(image_queries, pool.map(lambda query: find_dish_images(*query), image_queries)))
+
         for dish in extracted_dishes:
             norm_name = normalize_text(dish.get("name"))
             if not norm_name:
@@ -374,7 +383,9 @@ class MenuService:
             category = normalize_text(dish.get("category")) or "General"
             price = dish.get("price")
 
-            image_url = dish.get("image_url") or safe_image_url(norm_name, category)
+            images = image_results.get((norm_name, normalize_text(dish.get("cuisine")) or normalize_text(dish.get("category"))), [])
+            image = images[0] if images else {}
+            image_url = image.get("url")
             dish_obj = {
                 "id": f"{_slugify(norm_name)}-{uuid.uuid4().hex[:6]}",
                 "name": norm_name,
@@ -394,6 +405,10 @@ class MenuService:
                 "menu_source": dish.get("source_page") or files_to_process[0][0],
                 "image_url": image_url,
                 "photo": image_url,
+                "reference_images": images,
+                "image_source_url": image.get("source_url"),
+                "image_source": image.get("source"),
+                "image_provider": image.get("provider"),
             }
 
             # Same name AND section AND price => duplicate (e.g. overlapping pages).

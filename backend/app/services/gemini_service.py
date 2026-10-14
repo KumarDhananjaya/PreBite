@@ -3,58 +3,19 @@ from __future__ import annotations
 import logging
 from concurrent.futures import ThreadPoolExecutor
 from typing import Any
-from urllib.parse import quote_plus
 
 from app.core.llm_client import prepare_media, run_structured
-from app.core.text_utils import coerce_confidence, fold_text, normalize_list, normalize_text, words_pattern
+from app.core.text_utils import coerce_confidence, normalize_list, normalize_text
 
 logger = logging.getLogger(__name__)
 
-# Stock photos are only returned for unambiguous matches; otherwise None.
-DEFAULT_IMAGE_URLS = {
-    "pasta": "https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?auto=format&fit=crop&w=1200&q=80",
-    "pizza": "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=1200&q=80",
-    "rice": "https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=1200&q=80",
-    "dessert": "https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=1200&q=80",
-}
-
-_IMAGE_RULES = [
-    (words_pattern(["pasta", "spaghetti", "rigatoni", "carbonara", "penne", "fettuccine", "lasagna", "tagliatelle"]), "pasta"),
-    (words_pattern(["pizza", "pizzas"]), "pizza"),
-    (words_pattern(["biryani", "fried rice", "risotto", "paella"]), "rice"),
-    (words_pattern(["cake", "gelato", "tiramisu", "cheesecake", "brownie", "panna cotta", "dessert"]), "dessert"),
-]
-
-
-def _dish_web_image_url(dish_name: str, cuisine: str | None = None) -> str:
-    """Return a dish-specific public image URL using an Unsplash search query."""
-    cleaned = normalize_text(dish_name) or "food"
-    filtered_tokens = []
-    for token in cleaned.split():
-        lower = token.lower()
-        if lower in {"dish", "special", "chef", "house", "signature", "menu", "plate", "item"}:
-            continue
-        filtered_tokens.append(token)
-    if not filtered_tokens:
-        filtered_tokens = ["food"]
-
-    query_tokens = filtered_tokens[:4]
-    if cuisine:
-        cuisine_name = normalize_text(cuisine)
-        if cuisine_name:
-            query_tokens = [cuisine_name, *query_tokens]
-
-    query = " ".join(query_tokens[:6])
-    return f"https://source.unsplash.com/featured/1200x900/?{quote_plus(f'{query} food')}"
+from app.services.dish_image_service import find_dish_images, is_unsplash_image
 
 
 def _safe_image_url(dish_name: str, cuisine: str | None = None) -> str | None:
-    """Prefer a dish-specific web photo when possible; keep curated stock photos for obvious categories."""
-    haystack = fold_text(f"{dish_name} {cuisine or ''}")
-    for pattern, key in _IMAGE_RULES:
-        if pattern.search(haystack):
-            return DEFAULT_IMAGE_URLS[key]
-    return _dish_web_image_url(dish_name, cuisine)
+    """Use an actual dish-matched search result, never a category stock photo."""
+    images = find_dish_images(dish_name, cuisine)
+    return images[0]["url"] if images else None
 
 
 safe_image_url = _safe_image_url  # public alias for other services
@@ -125,7 +86,7 @@ def _normalize_analysis_items(data: dict[str, Any]) -> list[dict]:
                 # 0.0 stays 0.0; a missing/invalid value becomes a neutral 0.5
                 "confidence": coerce_confidence(item.get("confidence"), 0.5),
                 # never trust a model-supplied URL
-                "photo": _safe_image_url(name, cuisine),
+                "photo": None,
             }
         )
     return results
@@ -170,7 +131,12 @@ def analyze_menu_image(image_bytes: bytes | None, file_name: str | None = None, 
     if data is None:
         return []
     logger.info("Analyzed menu image via %s: %d dishes", engine, len(holder["results"]))
-    return holder["results"]
+    results = holder["results"]
+    with ThreadPoolExecutor(max_workers=min(4, len(results))) as pool:
+        photos = list(pool.map(lambda item: _safe_image_url(item["name"], item["cuisine"]), results))
+    for item, photo in zip(results, photos):
+        item["photo"] = photo
+    return results
 
 
 def _fallback_insight(dish_name: str, cuisine: str | None, ingredients: list[str] | None, dietary_flags: list[str] | None) -> dict:
@@ -242,7 +208,10 @@ def enrich_dish_record(dish: dict) -> dict:
         dish.get("dietary_flags") or [],
     )
     dish = dict(dish)
-    dish["image_url"] = dish.get("image_url") or insight.get("image_url")
+    dish["image_url"] = (None if is_unsplash_image(dish.get("image_url")) else dish.get("image_url")) or insight.get("image_url")
+
+    if is_unsplash_image(dish.get("photo")):
+        dish["photo"] = dish["image_url"]
 
     dish["claude_summary"] = insight.get("summary") or dish.get("description")
     dish["dish_story"] = insight.get("why_it_works") or dish.get("familiarity_bridge")

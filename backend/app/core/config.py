@@ -22,6 +22,9 @@ class Settings(BaseSettings):
     # Frontend
     cors_origins: str = "http://localhost:3000,http://localhost:5173"
 
+    # Optional Google Images search via SerpApi; Wikimedia remains the free fallback.
+    serpapi_api_key: str = ""
+
     # Claude is the only supported AI provider.
     claude_api_key: str = ""
     anthropic_api_key: str = ""

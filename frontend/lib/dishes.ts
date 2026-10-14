@@ -22,12 +22,6 @@ export type Dish = {
   confidence?: number;
 };
 
-const photoByDishId: Record<string, string> = {
-  "aglio-e-olio": "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?auto=format&fit=crop&w=1200&q=85",
-  carbonara: "https://images.unsplash.com/photo-1556761223-4c4282c73f77?auto=format&fit=crop&w=1200&q=85",
-  "cacio-e-pepe": "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&w=1200&q=85",
-  amatriciana: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1200&q=85",
-};
 export const SCAN_DISH_STORAGE_KEY = "prebite:scan-dishes";
 
 export function isScannedDishId(id?: string | null): boolean {
@@ -82,7 +76,7 @@ export function fromApiDish(source: ApiDish, bridge?: ApiTasteBridge): Dish {
     warning: containsPork ? "Contains Pork" : undefined,
     waiterText: phrase?.text ?? "Posso avere questo piatto, per favore?",
     waiterTranslation: phrase?.meaning ?? "May I have this dish, please?",
-    photo: source.image_url ?? source.photo ?? photoByDishId[source.id] ?? "",
+    photo: source.image_url ?? source.photo ?? "",
     story: source.dish_story ?? source.gemini_summary ?? source.description,
     confidence: source.gemini_confidence ?? 0.82,
   };

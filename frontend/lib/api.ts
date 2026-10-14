@@ -56,6 +56,9 @@ export type ApiMenuDish = {
   menu_source?: string;
   is_user_corrected?: boolean;
   image_url?: string | null;
+  image_source_url?: string | null;
+  image_source?: string | null;
+  image_provider?: string | null;
   photo?: string | null;
 };
 
@@ -98,7 +101,7 @@ export type InferredIngredient = {
 };
 
 export type DishExplanation = {
-  images?: { url: string; source_url: string; title: string; artist: string; license: string }[];
+  images?: { url: string; source_url: string; title: string; artist: string; license: string; source?: string; provider?: string }[];
   dish_id: string;
   dish_name: string;
   menu_category?: string | null;

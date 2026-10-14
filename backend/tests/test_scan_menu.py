@@ -1,5 +1,13 @@
+import pytest
+from app.services import gemini_service
 from app.controllers import dish_controller
 from app.services.gemini_service import _safe_image_url
+
+
+@pytest.fixture(autouse=True)
+def dish_matched_photos(monkeypatch):
+    monkeypatch.setattr(gemini_service, "find_dish_images", lambda name, cuisine=None: [
+        {"url": "https://recipes.example/" + name.lower().replace(" ", "-") + ".jpg"}])
 
 
 class FakeCursor:
@@ -31,7 +39,7 @@ def test_safe_image_url_uses_web_image_for_specific_dish_name():
     photo = _safe_image_url("Miso Ramen", "Japanese")
 
     assert photo
-    assert "unsplash" in photo.lower() or "images.unsplash.com" in photo.lower() or "source.unsplash.com" in photo.lower()
+    assert photo == "https://recipes.example/miso-ramen.jpg"
 
 
 def test_scan_uploaded_menu_ranks_ordered_dishes_from_uploaded_image_name():
@@ -56,7 +64,7 @@ def test_get_dish_returns_reference_image():
     result = dish_controller.get_dish(db, "carbonara")
 
     assert result["image_url"]
-    assert "unsplash" in result["image_url"].lower()
+    assert result["image_url"] == "https://recipes.example/rigatoni-alla-carbonara.jpg"
 
 
 def test_scan_uploaded_menu_uses_llm_menu_analysis(monkeypatch):
@@ -86,3 +94,14 @@ def test_scan_uploaded_menu_uses_llm_menu_analysis(monkeypatch):
     assert result[0]["summary"] == "Fresh tomato pizza with basil and mozzarella."
     assert result[0]["confidence"] >= 0.9
     assert result[0]["photo"]
+
+
+def test_missing_search_result_does_not_substitute_stock(monkeypatch):
+    monkeypatch.setattr(gemini_service, "find_dish_images", lambda *args: [])
+    assert _safe_image_url("Miso Ramen", "Japanese") is None
+
+
+def test_existing_unsplash_catalog_photo_is_replaced():
+    dish = gemini_service.enrich_dish_record({"name": "Miso Ramen", "cuisine": "Japanese",
+        "image_url": "https://images.unsplash.com/stock.jpg"})
+    assert dish["image_url"] == "https://recipes.example/miso-ramen.jpg"
