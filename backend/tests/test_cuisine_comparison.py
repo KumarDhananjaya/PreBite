@@ -5,6 +5,7 @@ def test_comparison_uses_selected_cuisine_and_validates_rows(monkeypatch):
     expected = {
         "familiar_dish": "Dal",
         "summary": "A comforting analogy with different ingredients.",
+        **{key: "Specific culinary reference details." for key in service.REFERENCE_FIELDS},
         "rows": [{"aspect": aspect, "dish": "Menu context", "home": "Home context",
                   "difference": "Different preparation"} for aspect in service.ASPECTS],
     }
@@ -13,6 +14,7 @@ def test_comparison_uses_selected_cuisine_and_validates_rows(monkeypatch):
         assert 'North Indian' in kwargs['prompt']
         assert 'Soup' in kwargs['prompt']
         assert kwargs['accept'](expected)
+        assert not kwargs['accept']({**expected, 'home_description': ''})
         assert not kwargs['accept']({**expected, 'rows': []})
         assert not kwargs['accept']({**expected, 'rows': [{}] * 5})
         return expected, 'test'

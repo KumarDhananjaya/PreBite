@@ -102,7 +102,7 @@ export type InferredIngredient = {
 
 export type CuisineComparison = {
   home_cuisine: string;
-  comparison: { familiar_dish: string; summary: string; rows: { aspect: string; dish: string; home: string; difference: string }[] } | null;
+  comparison: { familiar_dish: string; summary: string; home_description: string; why_similar: string; key_difference: string; serving_style: string; rows: { aspect: string; dish: string; home: string; difference: string }[] } | null;
 };
 
 export type DishExplanation = {
