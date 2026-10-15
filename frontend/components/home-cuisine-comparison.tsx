@@ -38,9 +38,22 @@ export function HomeCuisineComparison({ menuId, dishId, dishName, revision }: {
         ) : comparison ? (
           <>
             <div className="mt-6 rounded-2xl border border-blue-500/20 bg-blue-500/5 p-5">
-              <p className="text-xs font-semibold text-blue-300">Your familiar reference</p>
+              <p className="text-xs font-semibold text-blue-300">Food reference from your home cuisine</p>
               <h3 className="mt-2 text-lg font-bold text-white">{comparison.familiar_dish}</h3>
               <p className="mt-2 text-sm leading-7 text-zinc-300">{comparison.summary}</p>
+              <dl className="mt-5 grid gap-5 sm:grid-cols-2">
+                {[
+                  ["About this home dish", comparison.home_description],
+                  ["Why it feels familiar", comparison.why_similar],
+                  ["What tastes different", comparison.key_difference],
+                  ["How it is usually eaten", comparison.serving_style],
+                ].map(([label, detail]) => (
+                  <div key={label}>
+                    <dt className="text-xs font-semibold text-blue-300">{label}</dt>
+                    <dd className="mt-2 text-sm leading-7 text-zinc-300">{detail}</dd>
+                  </div>
+                ))}
+              </dl>
             </div>
             <div className="mt-5 space-y-3">
               {comparison.rows.map((row) => (
