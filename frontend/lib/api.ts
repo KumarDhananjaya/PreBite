@@ -100,6 +100,11 @@ export type InferredIngredient = {
   note?: string | null;
 };
 
+export type CuisineComparison = {
+  home_cuisine: string;
+  comparison: { familiar_dish: string; summary: string; rows: { aspect: string; dish: string; home: string; difference: string }[] } | null;
+};
+
 export type DishExplanation = {
   images?: { url: string; source_url: string; title: string; artist: string; license: string; source?: string; provider?: string }[];
   dish_id: string;
@@ -235,6 +240,8 @@ export const api = {
     }
     return response.json() as Promise<{ items: ScanMatchItem[] }>;
   },
+  compareMenuDish: (menuId: string, dishId: string, cuisine: string) =>
+    request<CuisineComparison>(`/menus/${encodeURIComponent(menuId)}/dishes/${encodeURIComponent(dishId)}/comparison?home_cuisine=${encodeURIComponent(cuisine)}`, { method: "POST" }),
   explainMenuDish: (menuId: string, dishId: string) =>
     request<DishExplanation>(`/menus/${encodeURIComponent(menuId)}/dishes/${encodeURIComponent(dishId)}/explain`, { method: "POST" }),
   retryMenu: async (menuId: string, file?: File) => {
