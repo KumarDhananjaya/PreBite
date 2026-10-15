@@ -20,6 +20,7 @@ import {
   Volume2,
   X,
 } from "lucide-react";
+import { HomeCuisineComparison } from "@/components/home-cuisine-comparison";
 import { api, type ApiMenuDish, type DishExplanation } from "@/lib/api";
 
 export default function DishDetailPage() {
@@ -262,6 +263,8 @@ export default function DishDetailPage() {
           </div>
         </section>
       )}
+
+      <HomeCuisineComparison menuId={menuId} dishId={dishId} dishName={dish.name} revision={JSON.stringify(dish)} />
 
       {/* SECTION 2: UNDERSTAND THIS DISH (AI EXPLANATION) */}
       <section className="mt-8 rounded-3xl border border-zinc-800 bg-zinc-900/40 p-6 sm:p-8">

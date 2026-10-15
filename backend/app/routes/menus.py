@@ -2,7 +2,7 @@ import asyncio
 from functools import partial
 from typing import Any
 
-from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, UploadFile
 from pymongo.database import Database
 
 from app.controllers import menu_controller
@@ -110,3 +110,19 @@ async def retry_menu_processing(
     return await asyncio.to_thread(
         menu_controller.retry_menu_processing, db, menu_id, filename, content
     )
+
+
+@router.post("/{menu_id}/dishes/{dish_id}/comparison")
+async def compare_menu_dish(
+    menu_id: str, dish_id: str,
+    home_cuisine: str = Query(min_length=1, max_length=100),
+    db: Database = Depends(db_session),
+):
+    from app.services.cuisine_comparison_service import compare_home_cuisine
+
+    menu = await asyncio.to_thread(menu_controller._get_menu, db, menu_id)
+    dish = next((item for item in menu.get("dishes", [])
+                 if isinstance(item, dict) and item.get("id") == dish_id), None)
+    if dish is None:
+        raise HTTPException(status_code=404, detail="Dish not found in this menu")
+    return await asyncio.to_thread(compare_home_cuisine, dish, home_cuisine)
